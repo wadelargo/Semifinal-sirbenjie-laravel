@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency</title>
+    <script src="/js/jquery.min.js"></script>
+
+    <style>
+#entry {
+    border:1px solid black;
+    padding: 10px;
+    display: inline-block;
+    height: inherit;
+}
+label {
+    display: flex;
+}
+button {
+    display: flex;
+    margin-top: 10px;
+    padding: 5px;
+}
+
+    </style>
+</head>
+<body>
+
+
+    <form id="entry" action="#">
+        <label for="num1">First Number</label><br>
+        <input type="number" id="num1" name="num1"><br><br>
+
+        <label for="num2">Second Number</label><br>
+        <input type="number" id="num2" name="num2"><br><br>
+
+        <button id="calculateBtn" type="button">Calculate</button>
+
+        <div id="output"></div>
+    </form>
+    <script>
+        $(document).ready(()=>{
+            $('#calculateBtn').click(()=>{
+                $.post('http://localhost:8000/api/multiply',
+                    $("#entry").serialize()
+                ).done((data)=>{
+                    var out = $("#output")
+                    out.text("")
+                    const prod = data.product.toLocaleString(undefined, {style: 'currency', currency: 'PHP'});
+                    out.append("<h3>Product: " + prod + "</h3>")
+                }).fail((error)=>{
+                    var out  = $("#output")
+                    out.text("")
+                    out.append("<h3 class='error'>" + error.responseJSON.message + "</h3>")
+                })
+            })
+        })
+    </script>
+</body>
+</html>
